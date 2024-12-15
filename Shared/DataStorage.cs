@@ -13,7 +13,6 @@ namespace Shared
 
         public DataStorage()
         {
-            // Find the Shared project directory dynamically
             var currentDirectory = Directory.GetCurrentDirectory();
             var directory = new DirectoryInfo(currentDirectory);
 
@@ -27,16 +26,13 @@ namespace Shared
                 throw new Exception("Solution root not found.");
             }
 
-            // Path to the Data folder in the Shared project
             var dataDirectory = Path.Combine(directory.FullName, "Shared", "Data");
 
-            // Ensure the Data directory exists
             if (!Directory.Exists(dataDirectory))
             {
                 Directory.CreateDirectory(dataDirectory);
             }
 
-            // Set the file path to exchange_rates.json
             filePath = Path.Combine(dataDirectory, "exchange_rates.json");
         }
 
@@ -45,15 +41,12 @@ namespace Shared
         {
             var existingRates = await LoadRatesAsync();
 
-            // Remove any existing rates with the same pairs to avoid duplicates
             var updatedRates = existingRates
                 .Where(existingRate => !newRates.Any(newRate => newRate.Pair == existingRate.Pair))
                 .ToList();
 
-            // Add the new rates
             updatedRates.AddRange(newRates);
 
-            // Serialize and save the combined rates
             var json = JsonConvert.SerializeObject(updatedRates, Newtonsoft.Json.Formatting.Indented);
             await File.WriteAllTextAsync(filePath, json);
         }

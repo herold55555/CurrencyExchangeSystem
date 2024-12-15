@@ -51,7 +51,6 @@ namespace CurrencyExchangeSystem.Services
                     if (rates.Count > 0)
                     {
                         await buffer.SendAsync(rates);
-                        Console.WriteLine($"{DateTime.Now}: Produced rates and added to buffer.");
                     }
                 }
                 catch (Exception ex)
@@ -67,8 +66,10 @@ namespace CurrencyExchangeSystem.Services
         {
             try
             {
-                var fromCurrency = pair.Split('/')[0];
-                var toCurrency = pair.Split('/')[1];
+                var currencies = pair.Split('/');
+                var fromCurrency = currencies[0];
+                var toCurrency = currencies[1];
+
                 var fullUrl = $"https://www.xe.com/currencyconverter/convert/?Amount=1&From={fromCurrency}&To={toCurrency}";
 
                 var web = new HtmlWeb();
@@ -77,11 +78,11 @@ namespace CurrencyExchangeSystem.Services
                 var innerText = doc.DocumentNode.ChildNodes[1].InnerText;
 
                 var searchString = "1.00";
-                var startIndex = innerText.IndexOf(searchString, StringComparison.OrdinalIgnoreCase);
+                var startIndex = innerText.IndexOf(searchString);
 
                 if (startIndex != -1)
                 {
-                    var substring = innerText.Substring(startIndex, 50);
+                    var substring = innerText.Substring(startIndex, 40);
 
                     var parts = substring.Split('=');
                     if (parts.Length > 1)

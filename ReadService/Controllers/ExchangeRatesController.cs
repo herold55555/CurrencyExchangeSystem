@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Shared;
 using CurrencyExchangeSystem.Models;
 
@@ -23,7 +21,7 @@ namespace ReadService.Controllers
                 {
                     Status = "Error",
                     Message = "No exchange rate data available.",
-                    Timestamp = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 });
             }
 
